@@ -1,0 +1,21 @@
+{
+  "name": "webview-event-messaging",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "./node_modules/.bin/rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.7.2",
+    "rollup": "^1.27.6",
+    "rollup-plugin-typescript2": "^0.25.2"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.149"
+  }
+}

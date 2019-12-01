@@ -1,0 +1,1 @@
+{"version":3,"file":"android.d.ts","sourceRoot":"","sources":["../src/handlers/android.ts"],"names":[],"mappings":"AAAA,OAAO,OAAO,MAAM,WAAW,CAAC;AAEhC,cAAM,cAAe,SAAQ,OAAO;IAChC,QAAQ,CAAC,MAAM,EAAE,MAAM,EAAE,UAAU,EAAE,GAAG;CAO3C;;AAED,wBAAoC"}
