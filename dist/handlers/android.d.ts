@@ -1,6 +1,6 @@
 import Handler from "./handler";
 declare class AndroidHandler extends Handler {
-    dispatch(method: string, parameters: any): Promise<unknown>;
+    dispatch(method: string, parameters: any): any;
 }
 declare const _default: AndroidHandler;
 export default _default;

@@ -62,7 +62,7 @@ function __extends(d, b) {
 var Handler = /** @class */ (function () {
     function Handler() {
     }
-    Handler.prototype.toJson = function (method, parameters) {
+    Handler.prototype.toJsonRpc = function (method, parameters) {
         return JSON.stringify({
             jsonrpc: "2.0",
             method: method,
@@ -78,11 +78,8 @@ var AndroidHandler = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     AndroidHandler.prototype.dispatch = function (method, parameters) {
-        return new Promise(function (resolve, reject) {
-            // @TODO
-            resolve('X');
-            reject('Y');
-        });
+        var message = window.Android.rpcFromWebView(this.toJsonRpc(method, parameters));
+        return JSON.parse(message);
     };
     return AndroidHandler;
 }(Handler));
@@ -120,14 +117,28 @@ var MessageBus = /** @class */ (function () {
         return this;
     };
     MessageBus.prototype.emit = function (method, parameters) {
+        var response;
+        if (platform$1 === 'unknown') {
+            return new Promise(function (resolve, reject) {
+                reject('Unknown platform');
+            });
+        }
         if (platform$1 === 'android') {
-            return android.dispatch(method, parameters);
+            var response_1 = android.dispatch(method, parameters);
         }
         else if (platform$1 === 'ios') {
-            return ios.dispatch(method, parameters);
+            var response_2 = ios.dispatch(method, parameters);
         }
         return new Promise(function (resolve, reject) {
-            reject('Unknown platform');
+            try {
+                if (_.isSet(response.error)) {
+                    reject("[" + response.error.code + "] " + response.error.message);
+                }
+                resolve(response.result);
+            }
+            catch (err) {
+                reject(err.message);
+            }
         });
     };
     MessageBus.prototype.handle = function (message) {
