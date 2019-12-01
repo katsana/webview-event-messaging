@@ -3,6 +3,17 @@ import platform from "./platform";
 import android from "./handlers/android";
 import ios from "./handlers/ios";
 
+declare global {
+    interface Window {
+        Android: any;
+    }
+
+    interface Navigator {
+        userAgent: string,
+        standalone: boolean,
+    }
+}
+
 let events: any = {};
 
 class MessageBus {
@@ -23,14 +34,30 @@ class MessageBus {
     }
 
     emit(method: string, parameters: any) {
+        let response: any;
+
+        if (platform === 'unknown') {
+            return new Promise((resolve, reject) => {
+                reject('Unknown platform');
+            });
+        }
+
         if (platform === 'android') {
-            return android.dispatch(method, parameters);
+            let response = android.dispatch(method, parameters);
         } else if (platform === 'ios') {
-            return ios.dispatch(method, parameters);
+            let response = ios.dispatch(method, parameters);
         }
 
         return new Promise((resolve, reject) => {
-            reject('Unknown platform');
+            try {
+                if (_.isSet(response.error)) {
+                    reject(`[${response.error.code}] ${response.error.message}`);
+                }
+
+                resolve(response.result);
+            } catch (err) {
+                reject(err.message);
+            }
         });
     }
 

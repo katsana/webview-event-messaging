@@ -2,11 +2,9 @@ import Handler from "./handler";
 
 class AndroidHandler extends Handler {
     dispatch(method: string, parameters: any) {
-        return new Promise((resolve, reject) => {
-            // @TODO
-            resolve('X');
-            reject('Y');
-        });
+        let message = window.Android.rpcFromWebView(this.toJsonRpc(method, parameters));
+
+        return JSON.parse(message);
     }
 }
 

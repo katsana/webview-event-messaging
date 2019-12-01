@@ -2,17 +2,6 @@ import _ from "lodash";
 
 let platform: string = 'unknown';
 
-declare global {
-    interface Window {
-        Android: any;
-    }
-
-    interface Navigator {
-        userAgent: string,
-        standalone: boolean,
-    }
-}
-
 function isAndroid(): boolean {
     return typeof window.Android === "undefined";
 }
