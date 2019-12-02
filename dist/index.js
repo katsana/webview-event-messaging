@@ -158,6 +158,9 @@ var MessageBus = /** @class */ (function () {
         else if (platform$1 === 'ios') {
             ios.mounted();
         }
+        else {
+            console.log('Not mounted to ios or android');
+        }
     }
     MessageBus.prototype.on = function (method, handler) {
         if (!_.isFunction(handler)) {

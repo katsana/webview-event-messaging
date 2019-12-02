@@ -24,6 +24,8 @@ class MessageBus {
             android.mounted();
         } else if (platform === 'ios') {
             ios.mounted();
+        } else {
+            console.log('Not mounted to ios or android');
         }
     }
 
