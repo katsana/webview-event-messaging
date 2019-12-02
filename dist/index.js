@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 var platform = 'unknown';
 function isAndroid() {
-    return typeof window.Android === "undefined";
+    return typeof window.Android !== "undefined";
 }
 function isIos() {
     var standalone = window.navigator.standalone;

@@ -3,7 +3,7 @@ import _ from "lodash";
 let platform: string = 'unknown';
 
 function isAndroid(): boolean {
-    return typeof window.Android === "undefined";
+    return typeof window.Android !== "undefined";
 }
 
 function isIos(): boolean {
