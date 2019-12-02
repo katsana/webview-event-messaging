@@ -50,6 +50,8 @@ class MessageBus {
     }
 
     emit(method: string, parameters: any) {
+        console.log('Emit event:', method, parameters);
+        
         if (platform === 'unknown') {
             return new Promise((resolve, reject) => {
                 reject('Unknown platform');

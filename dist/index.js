@@ -177,6 +177,7 @@ var MessageBus = /** @class */ (function () {
         return this;
     };
     MessageBus.prototype.emit = function (method, parameters) {
+        console.log('Emit event:', method, parameters);
         if (platform$1 === 'unknown') {
             return new Promise(function (resolve, reject) {
                 reject('Unknown platform');
