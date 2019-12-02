@@ -68,6 +68,10 @@ class MessageBus {
     handle(message: string): this {
         let payload = JSON.parse(message);
 
+        if (!_.isSet(payload.jsonrpc) || payload.jsonrpc !== '2.0') {
+            throw new Error('Request should be JSONRPC');
+        }
+
         if (platform === 'android') {
             this.dispatch(android, payload.method, payload.params);
         } else if (platform === 'ios') {

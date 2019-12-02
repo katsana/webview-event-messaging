@@ -193,6 +193,9 @@ var MessageBus = /** @class */ (function () {
     };
     MessageBus.prototype.handle = function (message) {
         var payload = JSON.parse(message);
+        if (!_.isSet(payload.jsonrpc) || payload.jsonrpc !== '2.0') {
+            throw new Error('Request should be JSONRPC');
+        }
         if (platform$1 === 'android') {
             this.dispatch(android, payload.method, payload.params);
         }
