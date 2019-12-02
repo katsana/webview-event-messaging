@@ -5,7 +5,9 @@ import ios from "./handlers/ios";
 
 declare global {
     interface Window {
+        webkit: any;
         Android: any;
+        onMessageReceive: Function;
     }
 
     interface Navigator {
@@ -17,6 +19,14 @@ declare global {
 let events: any = {};
 
 class MessageBus {
+    constructor() {
+        if (platform === 'android') {
+            android.mounted();
+        } else if (platform === 'ios') {
+            ios.mounted();
+        }
+    }
+
     on(method: string, handler: any): this {
         if (!_.isFunction(handler)) {
             throw new Error("Handler is not a function!");
@@ -34,31 +44,25 @@ class MessageBus {
     }
 
     emit(method: string, parameters: any) {
-        let response: any;
-
         if (platform === 'unknown') {
             return new Promise((resolve, reject) => {
                 reject('Unknown platform');
             });
+        } else if (platform === 'android') {
+            return android.dispatch(method, parameters);
         }
 
-        return new Promise((resolve, reject) => {
-            try {
-                if (platform === 'android') {
-                    let response = android.dispatch(method, parameters);
-                } else if (platform === 'ios') {
+        if (platform === 'ios') {
+            return new Promise((resolve, reject) => {
+                try {
                     let response = ios.dispatch(method, parameters);
-                }
-                
-                if (_.isSet(response.error)) {
-                    reject(`[${response.error.code}] ${response.error.message}`);
-                }
 
-                resolve(response.result);
-            } catch (err) {
-                reject(err.message);
-            }
-        });
+                    resolve(response.result);
+                } catch (err) {
+                    reject(err.message);
+                }
+            });
+        }
     }
 
     handle(message: string): this {
@@ -75,6 +79,8 @@ class MessageBus {
 
     private dispatch(instance: any, method: string, parameters: any) {
         if (_.isSet(events[method]) && _.isFunction(events[method])) {
+            console.log('Dispatch event:', method, parameters);
+
             events[method].apply(instance, parameters);
         }
     }

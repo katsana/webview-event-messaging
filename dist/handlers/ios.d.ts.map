@@ -1,1 +1,1 @@
-{"version":3,"file":"ios.d.ts","sourceRoot":"","sources":["../src/handlers/ios.ts"],"names":[],"mappings":"AAAA,OAAO,OAAO,MAAM,WAAW,CAAC;AAEhC,cAAM,UAAW,SAAQ,OAAO;IAC5B,QAAQ,CAAC,MAAM,EAAE,MAAM,EAAE,UAAU,EAAE,GAAG;CAO3C;;AAED,wBAAgC"}
+{"version":3,"file":"ios.d.ts","sourceRoot":"","sources":["../src/handlers/ios.ts"],"names":[],"mappings":"AAAA,OAAO,OAAO,MAAM,WAAW,CAAC;AAkBhC,cAAM,UAAW,SAAQ,OAAO;IAC5B,OAAO,IAAI,IAAI;IAMf,QAAQ,CAAC,MAAM,EAAE,MAAM,EAAE,UAAU,EAAE,GAAG,GAAG,GAAG;CAcjD;;AAED,wBAAgC"}
