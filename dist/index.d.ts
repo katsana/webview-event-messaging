@@ -11,6 +11,7 @@ declare global {
 }
 declare class MessageBus {
     constructor();
+    platform(): string;
     on(method: string, handler: any): this;
     forget(method: string): this;
     emit(method: string, parameters: any): Promise<unknown> | undefined;

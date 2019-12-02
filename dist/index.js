@@ -162,6 +162,9 @@ var MessageBus = /** @class */ (function () {
             console.log('Not mounted to ios or android');
         }
     }
+    MessageBus.prototype.platform = function () {
+        return platform$1;
+    };
     MessageBus.prototype.on = function (method, handler) {
         if (!_.isFunction(handler)) {
             throw new Error("Handler is not a function!");

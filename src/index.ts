@@ -29,6 +29,10 @@ class MessageBus {
         }
     }
 
+    platform(): string {
+        return platform;
+    }
+
     on(method: string, handler: any): this {
         if (!_.isFunction(handler)) {
             throw new Error("Handler is not a function!");
