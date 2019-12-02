@@ -62,6 +62,13 @@ function __extends(d, b) {
 var Handler = /** @class */ (function () {
     function Handler() {
     }
+    Handler.prototype.asJsonRpc = function (message) {
+        var response = JSON.parse(message);
+        if (!_.isSet(response.jsonrpc) || response.jsonrpc !== '2.0') {
+            throw new Error('Response should be JSONRPC');
+        }
+        return response;
+    };
     Handler.prototype.toJsonRpc = function (method, parameters) {
         return JSON.stringify({
             jsonrpc: "2.0",
@@ -79,7 +86,7 @@ var AndroidHandler = /** @class */ (function (_super) {
     }
     AndroidHandler.prototype.dispatch = function (method, parameters) {
         var message = window.Android.rpcFromWebView(this.toJsonRpc(method, parameters));
-        return JSON.parse(message);
+        return this.asJsonRpc(message);
     };
     return AndroidHandler;
 }(Handler));
@@ -123,14 +130,14 @@ var MessageBus = /** @class */ (function () {
                 reject('Unknown platform');
             });
         }
-        if (platform$1 === 'android') {
-            var response_1 = android.dispatch(method, parameters);
-        }
-        else if (platform$1 === 'ios') {
-            var response_2 = ios.dispatch(method, parameters);
-        }
         return new Promise(function (resolve, reject) {
             try {
+                if (platform$1 === 'android') {
+                    var response_1 = android.dispatch(method, parameters);
+                }
+                else if (platform$1 === 'ios') {
+                    var response_2 = ios.dispatch(method, parameters);
+                }
                 if (_.isSet(response.error)) {
                     reject("[" + response.error.code + "] " + response.error.message);
                 }

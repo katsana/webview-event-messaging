@@ -42,14 +42,14 @@ class MessageBus {
             });
         }
 
-        if (platform === 'android') {
-            let response = android.dispatch(method, parameters);
-        } else if (platform === 'ios') {
-            let response = ios.dispatch(method, parameters);
-        }
-
         return new Promise((resolve, reject) => {
             try {
+                if (platform === 'android') {
+                    let response = android.dispatch(method, parameters);
+                } else if (platform === 'ios') {
+                    let response = ios.dispatch(method, parameters);
+                }
+                
                 if (_.isSet(response.error)) {
                     reject(`[${response.error.code}] ${response.error.message}`);
                 }
