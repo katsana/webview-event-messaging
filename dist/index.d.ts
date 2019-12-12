@@ -18,6 +18,7 @@ declare class MessageBus {
     forget(method: string): this;
     emit(method: string, parameters: any): Promise<unknown>;
     handle(message: string): this;
+    rpcToWebView(message: string): this;
     private dispatch;
 }
 export default MessageBus;

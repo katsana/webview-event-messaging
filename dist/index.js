@@ -224,6 +224,9 @@ var MessageBus = /** @class */ (function () {
         this.dispatch(this.handler(), payload.method, payload.params);
         return this;
     };
+    MessageBus.prototype.rpcToWebView = function (message) {
+        return this.handle(message);
+    };
     MessageBus.prototype.dispatch = function (instance, method, parameters) {
         if (events[method] !== undefined && _.isFunction(events[method])) {
             console.log('Dispatch event:', method, parameters);

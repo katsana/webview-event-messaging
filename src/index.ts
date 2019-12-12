@@ -87,6 +87,10 @@ class MessageBus {
         return this;
     }
 
+    rpcToWebView(message: string): this {
+        return this.handle(message);
+    }
+
     private dispatch(instance: Handler, method: string, parameters: any) {
         if (events[method] !== undefined && _.isFunction(events[method])) {
             console.log('Dispatch event:', method, parameters);
