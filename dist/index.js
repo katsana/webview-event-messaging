@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-var platform = 'unknown';
+var platform = 'web';
 function isAndroid() {
     return typeof window.Android !== "undefined";
 }
@@ -62,7 +62,29 @@ function __extends(d, b) {
 var id = 1;
 var Handler = /** @class */ (function () {
     function Handler() {
+        this.instance = null;
     }
+    Handler.prototype.bindTo = function (instance) {
+        this.instance = instance;
+        return this;
+    };
+    Handler.prototype.dispatch = function (method, parameters) {
+        var _this = this;
+        var rpc = this.toJsonRpc(method, parameters);
+        var message = this.instance.rpcFromWebView(JSON.stringify(rpc));
+        return new Promise(function (resolve, reject) {
+            if (message == null) {
+                resolve(message);
+            }
+            try {
+                var response = _this.asJsonRpcResult(message);
+                resolve(response.result);
+            }
+            catch (err) {
+                reject(err.message);
+            }
+        });
+    };
     Handler.prototype.asJsonRpcResult = function (message) {
         var response = JSON.parse(message);
         if (typeof response.jsonrpc !== 'string' || response.jsonrpc !== '2.0') {
@@ -93,23 +115,9 @@ var AndroidHandler = /** @class */ (function (_super) {
         console.log("Mount Android handler");
         return this;
     };
-    AndroidHandler.prototype.dispatch = function (method, parameters) {
-        var _this = this;
-        var rpc = this.toJsonRpc(method, parameters);
-        var message = window.Android.rpcFromWebView(JSON.stringify(rpc));
-        return new Promise(function (resolve, reject) {
-            try {
-                var response = _this.asJsonRpcResult(message);
-                resolve(response.result);
-            }
-            catch (err) {
-                reject(err.message);
-            }
-        });
-    };
     return AndroidHandler;
 }(Handler));
-var android = new AndroidHandler();
+var android = (new AndroidHandler()).bindTo(window.Android);
 
 var handlers = {};
 window.onMessageReceive = function (key, error, message) {
@@ -149,19 +157,33 @@ var IosHandler = /** @class */ (function (_super) {
 }(Handler));
 var ios = new IosHandler();
 
+var WebHandler = /** @class */ (function (_super) {
+    __extends(WebHandler, _super);
+    function WebHandler() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    WebHandler.prototype.mounted = function () {
+        console.log("Mount web handler");
+        return this;
+    };
+    return WebHandler;
+}(Handler));
+var web = new WebHandler();
+
 var events = {};
 var MessageBus = /** @class */ (function () {
     function MessageBus() {
+        this.handler().mounted();
+    }
+    MessageBus.prototype.handler = function () {
         if (platform$1 === 'android') {
-            android.mounted();
+            return android;
         }
         else if (platform$1 === 'ios') {
-            ios.mounted();
+            return ios;
         }
-        else {
-            console.log('Not mounted to ios or android');
-        }
-    }
+        return web;
+    };
     MessageBus.prototype.platform = function () {
         return platform$1;
     };
@@ -178,15 +200,10 @@ var MessageBus = /** @class */ (function () {
     };
     MessageBus.prototype.emit = function (method, parameters) {
         console.log('Emit event:', method, parameters);
-        if (platform$1 === 'unknown') {
-            return new Promise(function (resolve, reject) {
-                reject('Unknown platform');
-            });
-        }
-        else if (platform$1 === 'android') {
+        if (platform$1 === 'android') {
             return android.dispatch(method, parameters);
         }
-        if (platform$1 === 'ios') {
+        else if (platform$1 === 'ios') {
             return new Promise(function (resolve, reject) {
                 try {
                     var response = ios.dispatch(method, parameters);
@@ -197,18 +214,14 @@ var MessageBus = /** @class */ (function () {
                 }
             });
         }
+        return web.dispatch(method, parameters);
     };
     MessageBus.prototype.handle = function (message) {
         var payload = JSON.parse(message);
         if (typeof payload.jsonrpc !== 'string' || payload.jsonrpc !== '2.0') {
             throw new Error('Request should be JSONRPC');
         }
-        if (platform$1 === 'android') {
-            this.dispatch(android, payload.method, payload.params);
-        }
-        else if (platform$1 === 'ios') {
-            this.dispatch(ios, payload.method, payload.params);
-        }
+        this.dispatch(this.handler(), payload.method, payload.params);
         return this;
     };
     MessageBus.prototype.dispatch = function (instance, method, parameters) {

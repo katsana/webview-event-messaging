@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-let platform: string = 'unknown';
+let platform: string = 'web';
 
 function isAndroid(): boolean {
     return typeof window.Android !== "undefined";

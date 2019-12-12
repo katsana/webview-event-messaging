@@ -1,7 +1,9 @@
 import _ from "lodash";
 import platform from "./platform";
+import Handler from "./handlers/handler";
 import android from "./handlers/android";
 import ios from "./handlers/ios";
+import web from "./handlers/web";
 
 declare global {
     interface Window {
@@ -20,13 +22,17 @@ let events: any = {};
 
 class MessageBus {
     constructor() {
+        this.handler().mounted();
+    }
+
+    handler(): Handler {
         if (platform === 'android') {
-            android.mounted();
+            return android;
         } else if (platform === 'ios') {
-            ios.mounted();
-        } else {
-            console.log('Not mounted to ios or android');
+            return ios;
         }
+
+        return web;
     }
 
     platform(): string {
@@ -52,15 +58,9 @@ class MessageBus {
     emit(method: string, parameters: any) {
         console.log('Emit event:', method, parameters);
         
-        if (platform === 'unknown') {
-            return new Promise((resolve, reject) => {
-                reject('Unknown platform');
-            });
-        } else if (platform === 'android') {
+        if (platform === 'android') {
             return android.dispatch(method, parameters);
-        }
-
-        if (platform === 'ios') {
+        } else if (platform === 'ios') {
             return new Promise((resolve, reject) => {
                 try {
                     let response = ios.dispatch(method, parameters);
@@ -71,6 +71,8 @@ class MessageBus {
                 }
             });
         }
+
+        return web.dispatch(method, parameters);
     }
 
     handle(message: string): this {
@@ -80,16 +82,12 @@ class MessageBus {
             throw new Error('Request should be JSONRPC');
         }
 
-        if (platform === 'android') {
-            this.dispatch(android, payload.method, payload.params);
-        } else if (platform === 'ios') {
-            this.dispatch(ios, payload.method, payload.params);
-        }
+        this.dispatch(this.handler(), payload.method, payload.params);
 
         return this;
     }
 
-    private dispatch(instance: any, method: string, parameters: any) {
+    private dispatch(instance: Handler, method: string, parameters: any) {
         if (events[method] !== undefined && _.isFunction(events[method])) {
             console.log('Dispatch event:', method, parameters);
 

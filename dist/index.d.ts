@@ -1,3 +1,4 @@
+import Handler from "./handlers/handler";
 declare global {
     interface Window {
         webkit: any;
@@ -11,10 +12,11 @@ declare global {
 }
 declare class MessageBus {
     constructor();
+    handler(): Handler;
     platform(): string;
     on(method: string, handler: any): this;
     forget(method: string): this;
-    emit(method: string, parameters: any): Promise<unknown> | undefined;
+    emit(method: string, parameters: any): Promise<unknown>;
     handle(message: string): this;
     private dispatch;
 }

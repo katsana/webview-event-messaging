@@ -6,20 +6,6 @@ class AndroidHandler extends Handler {
 
         return this;
     }
-    dispatch(method: string, parameters: any) {
-        let rpc = this.toJsonRpc(method, parameters);
-        let message = window.Android.rpcFromWebView(JSON.stringify(rpc));
-
-        return new Promise((resolve, reject) => {
-            try {
-                let response = this.asJsonRpcResult(message);
-
-                resolve(response.result);
-            } catch (err) {
-                reject(err.message);
-            }
-        });
-    }
 }
 
-export default new AndroidHandler();
+export default (new AndroidHandler()).bindTo(window.Android);
