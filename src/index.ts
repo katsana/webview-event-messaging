@@ -76,7 +76,7 @@ class MessageBus {
     handle(message: string): this {
         let payload = JSON.parse(message);
 
-        if (!_.isSet(payload.jsonrpc) || payload.jsonrpc !== '2.0') {
+        if (typeof payload.jsonrpc === 'string' || payload.jsonrpc !== '2.0') {
             throw new Error('Request should be JSONRPC');
         }
 
@@ -90,7 +90,7 @@ class MessageBus {
     }
 
     private dispatch(instance: any, method: string, parameters: any) {
-        if (_.isSet(events[method]) && _.isFunction(events[method])) {
+        if (events[method] !== undefined && _.isFunction(events[method])) {
             console.log('Dispatch event:', method, parameters);
 
             events[method].apply(instance, parameters);

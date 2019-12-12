@@ -65,10 +65,10 @@ var Handler = /** @class */ (function () {
     }
     Handler.prototype.asJsonRpcResult = function (message) {
         var response = JSON.parse(message);
-        if (!_.isSet(response.jsonrpc) || response.jsonrpc !== '2.0') {
+        if (typeof response.jsonrpc === 'string' || response.jsonrpc !== '2.0') {
             throw new Error('Response should be JSONRPC');
         }
-        else if (_.isSet(response.error)) {
+        else if (typeof response.error === 'object') {
             throw new Error("[" + response.error.code + "] " + response.error.message);
         }
         return response;
@@ -200,7 +200,7 @@ var MessageBus = /** @class */ (function () {
     };
     MessageBus.prototype.handle = function (message) {
         var payload = JSON.parse(message);
-        if (!_.isSet(payload.jsonrpc) || payload.jsonrpc !== '2.0') {
+        if (typeof payload.jsonrpc === 'string' || payload.jsonrpc !== '2.0') {
             throw new Error('Request should be JSONRPC');
         }
         if (platform$1 === 'android') {
@@ -212,7 +212,7 @@ var MessageBus = /** @class */ (function () {
         return this;
     };
     MessageBus.prototype.dispatch = function (instance, method, parameters) {
-        if (_.isSet(events[method]) && _.isFunction(events[method])) {
+        if (events[method] !== undefined && _.isFunction(events[method])) {
             console.log('Dispatch event:', method, parameters);
             events[method].apply(instance, parameters);
         }
