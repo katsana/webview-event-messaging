@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 let id: number = 1;
 
 abstract class Handler {

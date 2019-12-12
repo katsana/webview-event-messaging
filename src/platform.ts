@@ -1,5 +1,3 @@
-import _ from "lodash";
-
 let platform: string = 'web';
 
 function isAndroid(): boolean {
