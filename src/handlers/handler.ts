@@ -6,7 +6,7 @@ class Handler {
     asJsonRpcResult(message: string): any {
         let response = JSON.parse(message);
 
-        if (typeof response.jsonrpc === 'string' || response.jsonrpc !== '2.0') {
+        if (typeof response.jsonrpc !== 'string' || response.jsonrpc !== '2.0') {
             throw new Error('Response should be JSONRPC');
         } else if (typeof response.error === 'object') {
             throw new Error(`[${response.error.code}] ${response.error.message}`);

@@ -76,7 +76,7 @@ class MessageBus {
     handle(message: string): this {
         let payload = JSON.parse(message);
 
-        if (typeof payload.jsonrpc === 'string' || payload.jsonrpc !== '2.0') {
+        if (typeof payload.jsonrpc !== 'string' || payload.jsonrpc !== '2.0') {
             throw new Error('Request should be JSONRPC');
         }
 

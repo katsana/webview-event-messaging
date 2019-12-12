@@ -65,7 +65,7 @@ var Handler = /** @class */ (function () {
     }
     Handler.prototype.asJsonRpcResult = function (message) {
         var response = JSON.parse(message);
-        if (typeof response.jsonrpc === 'string' || response.jsonrpc !== '2.0') {
+        if (typeof response.jsonrpc !== 'string' || response.jsonrpc !== '2.0') {
             throw new Error('Response should be JSONRPC');
         }
         else if (typeof response.error === 'object') {
@@ -200,7 +200,7 @@ var MessageBus = /** @class */ (function () {
     };
     MessageBus.prototype.handle = function (message) {
         var payload = JSON.parse(message);
-        if (typeof payload.jsonrpc === 'string' || payload.jsonrpc !== '2.0') {
+        if (typeof payload.jsonrpc !== 'string' || payload.jsonrpc !== '2.0') {
             throw new Error('Request should be JSONRPC');
         }
         if (platform$1 === 'android') {
