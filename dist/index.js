@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 var platform = 'web';
 function isAndroid() {
     return typeof window.Android !== "undefined";
@@ -170,6 +168,8 @@ var WebHandler = /** @class */ (function (_super) {
 }(Handler));
 var web = new WebHandler();
 
+var isFunction = require('lodash').isFunction;
+var unset = require('lodash').unset;
 var events = {};
 android.bindTo(window.Android);
 var MessageBus = /** @class */ (function () {
@@ -189,14 +189,14 @@ var MessageBus = /** @class */ (function () {
         return platform$1;
     };
     MessageBus.prototype.on = function (method, handler) {
-        if (!_.isFunction(handler)) {
+        if (!isFunction(handler)) {
             throw new Error("Handler is not a function!");
         }
         events[method] = handler;
         return this;
     };
     MessageBus.prototype.forget = function (method) {
-        _.unset(events, method);
+        unset(events, method);
         return this;
     };
     MessageBus.prototype.emit = function (method, parameters) {
@@ -229,12 +229,11 @@ var MessageBus = /** @class */ (function () {
         return this;
     };
     MessageBus.prototype.dispatch = function (instance, method, parameters) {
-        if (events[method] !== undefined && _.isFunction(events[method])) {
+        if (events[method] !== undefined && isFunction(events[method])) {
             console.log('Dispatch event:', method, parameters);
             events[method].apply(instance, parameters);
         }
     };
     return MessageBus;
 }());
-
-export default MessageBus;
+module.exports = MessageBus;
