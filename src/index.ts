@@ -77,7 +77,6 @@ class MessageBus {
         return web.dispatch(method, parameters);
     }
 
-
     rpc(message: string): this {
         return this.handle(message);
     }
