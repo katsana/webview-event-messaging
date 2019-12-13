@@ -17,6 +17,7 @@ declare class MessageBus {
     on(method: string, handler: any): this;
     forget(method: string): this;
     emit(method: string, parameters: any): Promise<unknown>;
+    rpc(message: string): this;
     handle(message: string): this;
     private dispatch;
 }

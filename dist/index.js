@@ -71,7 +71,7 @@ var Handler = /** @class */ (function () {
     Handler.prototype.dispatch = function (method, parameters) {
         var _this = this;
         var rpc = this.toJsonRpc(method, parameters);
-        var message = this.instance.rpcFromWebView(JSON.stringify(rpc));
+        var message = this.instance.receivedRpc(JSON.stringify(rpc));
         return new Promise(function (resolve, reject) {
             if (message == null) {
                 resolve(message);
@@ -150,7 +150,7 @@ var IosHandler = /** @class */ (function (_super) {
                 reject: reject,
                 asJsonRpcResult: _this.asJsonRpcResult
             };
-            window.webkit.messageHandlers[_this.instance].postMessage(JSON.stringify(rpc));
+            window.webkit.messageHandlers.rpc.postMessage(JSON.stringify(rpc));
         });
     };
     return IosHandler;
@@ -171,7 +171,6 @@ var WebHandler = /** @class */ (function (_super) {
 var web = new WebHandler();
 
 var events = {};
-ios.bindTo('webview:rpc');
 android.bindTo(window.Android);
 var MessageBus = /** @class */ (function () {
     function MessageBus() {
@@ -217,6 +216,9 @@ var MessageBus = /** @class */ (function () {
             });
         }
         return web.dispatch(method, parameters);
+    };
+    MessageBus.prototype.rpc = function (message) {
+        return this.handle(message);
     };
     MessageBus.prototype.handle = function (message) {
         var payload = JSON.parse(message);
