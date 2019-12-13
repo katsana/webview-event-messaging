@@ -20,6 +20,9 @@ declare global {
 
 let events: any = {};
 
+ios.bindTo('webview:rpc');
+android.bindTo(window.Android);
+
 class MessageBus {
     constructor() {
         this.handler().mounted();
@@ -85,10 +88,6 @@ class MessageBus {
         this.dispatch(this.handler(), payload.method, payload.params);
 
         return this;
-    }
-
-    rpcToWebView(message: string): this {
-        return this.handle(message);
     }
 
     private dispatch(instance: Handler, method: string, parameters: any) {

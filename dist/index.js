@@ -117,7 +117,7 @@ var AndroidHandler = /** @class */ (function (_super) {
     };
     return AndroidHandler;
 }(Handler));
-var android = (new AndroidHandler()).bindTo(window.Android);
+var android = new AndroidHandler();
 
 var handlers = {};
 window.onMessageReceive = function (key, error, message) {
@@ -171,6 +171,8 @@ var WebHandler = /** @class */ (function (_super) {
 var web = new WebHandler();
 
 var events = {};
+ios.bindTo('webview:rpc');
+android.bindTo(window.Android);
 var MessageBus = /** @class */ (function () {
     function MessageBus() {
         this.handler().mounted();
@@ -223,9 +225,6 @@ var MessageBus = /** @class */ (function () {
         }
         this.dispatch(this.handler(), payload.method, payload.params);
         return this;
-    };
-    MessageBus.prototype.rpcToWebView = function (message) {
-        return this.handle(message);
     };
     MessageBus.prototype.dispatch = function (instance, method, parameters) {
         if (events[method] !== undefined && _.isFunction(events[method])) {

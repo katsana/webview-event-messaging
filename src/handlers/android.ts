@@ -8,4 +8,4 @@ class AndroidHandler extends Handler {
     }
 }
 
-export default (new AndroidHandler()).bindTo(window.Android);
+export default new AndroidHandler();
