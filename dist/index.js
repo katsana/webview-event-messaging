@@ -150,7 +150,7 @@ var IosHandler = /** @class */ (function (_super) {
                 reject: reject,
                 asJsonRpcResult: _this.asJsonRpcResult
             };
-            window.webkit.messageHandlers.rpcFromWebView.postMessage(JSON.stringify(rpc));
+            window.webkit.messageHandlers[_this.instance].postMessage(JSON.stringify(rpc));
         });
     };
     return IosHandler;
