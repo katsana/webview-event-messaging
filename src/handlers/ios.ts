@@ -34,7 +34,7 @@ class IosHandler extends Handler {
                 asJsonRpcResult: this.asJsonRpcResult
             };
 
-            window.webkit.messageHandlers.rpcFromWebView.postMessage(JSON.stringify(rpc));
+            window.webkit.messageHandlers[this.instance].postMessage(JSON.stringify(rpc));
         });
     }
 }
