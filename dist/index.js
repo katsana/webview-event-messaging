@@ -71,7 +71,7 @@ var Handler = /** @class */ (function () {
     Handler.prototype.dispatch = function (method, parameters) {
         var _this = this;
         var rpc = this.toJsonRpc(method, parameters);
-        var message = this.instance.receivedRpc(JSON.stringify(rpc));
+        var message = this.instance.rpc(JSON.stringify(rpc));
         return new Promise(function (resolve, reject) {
             if (message == null) {
                 resolve(message);

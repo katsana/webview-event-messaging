@@ -11,7 +11,7 @@ abstract class Handler {
 
     dispatch(method: string, parameters: any) {
         let rpc = this.toJsonRpc(method, parameters);
-        let message = this.instance.receivedRpc(JSON.stringify(rpc));
+        let message = this.instance.rpc(JSON.stringify(rpc));
 
         return new Promise((resolve, reject) => {
             if (message == null) {
