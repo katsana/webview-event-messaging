@@ -1,3 +1,4 @@
+import Handler from "./handlers/handler";
 declare global {
     interface Window {
         webkit: any;
@@ -9,5 +10,16 @@ declare global {
         standalone: boolean;
     }
 }
-export {};
+declare class MessageBus {
+    constructor();
+    handler(): Handler;
+    platform(): string;
+    on(method: string, handler: any): this;
+    forget(method: string): this;
+    emit(method: string, parameters: any): Promise<unknown>;
+    rpc(message: string): this;
+    handle(message: string): this;
+    private dispatch;
+}
+export default MessageBus;
 //# sourceMappingURL=index.d.ts.map

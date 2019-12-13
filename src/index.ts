@@ -105,4 +105,4 @@ class MessageBus {
     }
 }
 
-module.exports = MessageBus;
+export default MessageBus;

@@ -236,4 +236,5 @@ var MessageBus = /** @class */ (function () {
     };
     return MessageBus;
 }());
-module.exports = MessageBus;
+
+export default MessageBus;
