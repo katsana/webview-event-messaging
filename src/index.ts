@@ -1,9 +1,11 @@
-import _ from "lodash";
 import platform from "./platform";
 import Handler from "./handlers/handler";
 import android from "./handlers/android";
 import ios from "./handlers/ios";
 import web from "./handlers/web";
+
+let isFunction = require('lodash').isFunction;
+let unset = require('lodash').unset;
 
 declare global {
     interface Window {
@@ -42,7 +44,7 @@ class MessageBus {
     }
 
     on(method: string, handler: any): this {
-        if (!_.isFunction(handler)) {
+        if (!isFunction(handler)) {
             throw new Error("Handler is not a function!");
         }
 
@@ -52,7 +54,7 @@ class MessageBus {
     }
 
     forget(method: string): this {
-        _.unset(events, method);
+        unset(events, method);
 
         return this;
     }
@@ -94,7 +96,7 @@ class MessageBus {
     }
 
     private dispatch(instance: Handler, method: string, parameters: any) {
-        if (events[method] !== undefined && _.isFunction(events[method])) {
+        if (events[method] !== undefined && isFunction(events[method])) {
             console.log('Dispatch event:', method, parameters);
 
             events[method].apply(instance, parameters);
