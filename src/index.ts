@@ -1,4 +1,3 @@
-import _ from "lodash";
 import platform from "./platform";
 import Handler from "./handlers/handler";
 import android from "./handlers/android";
