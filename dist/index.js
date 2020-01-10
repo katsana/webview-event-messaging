@@ -237,4 +237,6 @@ var MessageBus = /** @class */ (function () {
     return MessageBus;
 }());
 
-export default MessageBus;
+var index = new MessageBus();
+
+export default index;
